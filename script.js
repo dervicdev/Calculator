@@ -1,42 +1,25 @@
-let equal_pressed = 0;
-let button_input = document.querySelectorAll(".input-button");
-let input = document.getElementById("input");
-let equal = document.getElementById("equal");
-let clear = document.getElementById("clear");
-let erase = document.getElementById("erase");
+let currentExpression = '';
 
-window.onload = () => {
-  input.value = "";
-};
+function appendNumber(number) {
+    currentExpression += number;
+    document.getElementById('result').value = currentExpression;
+}
 
-button_input.forEach((button_class) => {
-  button_class.addEventListener("click", () => {
-    if (equal_pressed == 1) {
-      input.value = "";
-      equal_pressed = 0;
+function appendOperator(operator) {
+    currentExpression += ` ${operator} `;
+    document.getElementById('result').value = currentExpression;
+}
+
+function calculateResult() {
+    try {
+        currentExpression = eval(currentExpression.replace('÷', '/').replace('×', '*'));
+        document.getElementById('result').value = currentExpression;
+    } catch {
+        document.getElementById('result').value = 'Error';
     }
-    input.value += button_class.value;
-  });
-});
+}
 
-equal.addEventListener("click", () => {
-  equal_pressed = 1;
-  let inp_val = input.value;
-  try {
-    let solution = eval(inp_val);
-    if (Number.isInteger(solution)) {
-      input.value = solution;
-    } else {
-      input.value = solution.toFixed(2);
-    }
-  } catch (err) {
-    alert("Invalid Input");
-  }
-});
-
-clear.addEventListener("click", () => {
-  input.value = "";
-});
-erase.addEventListener("click", () => {
-  input.value = input.value.substr(0, input.value.length - 1);
-});
+function clearResult() {
+    currentExpression = '';
+    document.getElementById('result').value = '';
+}
